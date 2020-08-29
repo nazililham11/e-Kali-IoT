@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>e-Kali - River Controlling System</title>
+            
+    <style type="text/css">
+        #banner {
+            background: url(img/banner-bg.jpg) center;
+            background-size: cover;
+        }
+        .feature-card {
+            min-height: 15rem!important;
+            justify-content: center;
+            align-items: center;
+            display: flex;
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+            padding: 1rem!important;
+            margin-top: 1rem!important;
+            margin-bottom: 1rem!important;
+            position: relative;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 1px solid rgba(0,0,0,.125);
+            border-radius: .25rem;
+        }
+
+    </style>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/vue.js"></script>
+</head>
+    
+    
+<body>	
+
+    <div id="app">
+
+        <!-- start banner Area -->
+        <div id="banner">
+            <div class="container">
+                <div class="row d-flex align-items-center justify-content-center">
+                    <div class="col-lg-6 col-md-6">
+                        <h1 class="text-white my-0 font-weight-bold">e-Kali</h1>
+                        <h4 class="text-white text-uppercase my-0 font-weight-normal">River Controlling System</h4>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <img class="img-fluid" src="img/banner-img.png" alt="">
+                    </div>												
+                </div>
+            </div>
+        </div>
+        <!-- End banner Area -->
+
+
+        <!-- Start features Area -->
+        <div class="container">
+            <div class="row my-5">
+                <div class="col-12">
+                    <div class="d-flex flex-row align-items-center">
+                        <h1 class="flex-fill text-center">Featured of e-Kali</h1>
+                        <button :class="btn_class" @click="refresh_data" :disabled="is_loading">Refresh</button>
+                    </div>
+                </div>
+            </div>			
+
+            <div class="row">
+                <!-- DAM -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card">
+                        <h4>DAM</h4>
+                        <p>Status :  <span v-html="get_data('dam1')"></span> </p>
+                        <div class="d-flex justify-content-center">
+                            <button :class="btn_class" @click="button_click('dam1', 1)" :disabled="is_loading">Up</button>
+                            <button :class="btn_class" @click="button_click('dam1', 0)" :disabled="is_loading">Down</button>
+                        </div>
+                    </div>
+                </div>	
+
+
+                <!-- Irigation System -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card">
+                        <h4>Irigation System</h4>
+                        <p class="mb-0">Irigation 1 Status : <span v-html="get_data('dam2')"></span></p>
+                        <div class="d-flex justify-content-center">
+                            <button :class="btn_class" @click="button_click('dam2', 1)" :disabled="is_loading">Up</button>
+                            <button :class="btn_class" @click="button_click('dam2', 0)" :disabled="is_loading">Down</button>
+                        </div>
+
+                        <p class="mb-0 mt-3">Irigation 2 Status : <span v-html="get_data('dam3')"></span></p>
+                        <div class="d-flex justify-content-center">
+                            <button :class="btn_class" @click="button_click('dam3', 1)" :disabled="is_loading">Up</button>
+                            <button :class="btn_class" @click="button_click('dam3', 0)" :disabled="is_loading">Down</button>
+                        </div>
+                    </div>
+                </div>	
+
+
+                <!-- Garbage Lift -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card">
+                        <h4>Garbage Lift</h4>
+                        <p>Status : <span v-html="get_data('grb')"></span></p>
+                        <div class="d-flex justify-content-center">
+                            <button :class="btn_class" @click="button_click('grb', 1)" :disabled="is_loading">Up</button>
+                            <button :class="btn_class" @click="button_click('grb', 0)" :disabled="is_loading">Down</button>
+                        </div>
+                    </div>
+                </div>	
+
+                <!-- Alarm -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-card">
+                        <h4>Alarm</h4>
+                        <p>Status : <span v-html="get_data('alm')"></span></p>
+                        <div class="d-flex justify-content-center">
+                            <button :class="btn_class" @click="button_click('alm', 1)" :disabled="is_loading">On</button>
+                            <button :class="btn_class" @click="button_click('alm', 0)" :disabled="is_loading">Off</button>
+                        </div>
+                    </div>
+                </div>	
+
+            </div>
+            <div class="row">
+
+                <!-- Generator -->
+                <div class="col-lg-6 col-md-12">
+                    <div class="feature-card">
+                        <h4>Generator</h4>
+                        <p>Voltage : <span v-html="get_data('vol')"></span> Volt</p>
+                        <div id="volChart" style="height: 300px; width: 100%;"></div>
+                    </div>
+                </div>	
+
+                <!-- Water Level -->
+                <div class="col-lg-6 col-md-12">
+                    <div class="feature-card">
+                        <h4>Water Level</h4>
+                        <div class="d-flex justify-content-between">
+                            <p class="mx-2">Level : <span v-html="get_data('wls')"></span></p>
+                            <p class="mx-2">Height : <span v-html="get_data('wlv')"></span> Meter</p>
+                        </div>
+                        <div id="wlvChart" style="height: 300px; width: 100%;"></div>
+                    </div>
+                </div>	
+
+            </div>
+        </div>
+            
+            
+        <!-- End features Area -->
+
+    </div>
+
+    <script src="js/chart.min.js"></script>
+    <script>
+        const WaterLevelStatus = [
+            {label: "Very Low",  comp: (v) => (v < 5)},
+            {label: "Low",       comp: (v) => (v >= 5 && v < 10)},
+            {label: "Normal",    comp: (v) => (v >= 10 && v < 15)},
+            {label: "High",      comp: (v) => (v >= 15 && v < 20)},
+            {label: "Very High", comp: (v) => (v >= 20)},
+        ]
+        var D = {
+            input_url : 'input.php',
+            data_url  : 'data.json',
+            voltage_log_url  : 'volt.json',
+            water_level_log_url  : 'water.json',
+            is_loading : false,
+            data : {},
+            voltage_chart: undefined,
+            voltage_data: [],
+            water_level_chart: undefined,
+            water_level_data: [],
+        }
+
+        var app = new Vue({
+            el : '#app',
+            data : D,
+            methods : {
+                button_click(f, v){
+                    D.is_loading = true
+                    console.log(`Feature : ${f}, value : ${v}`)
+                    let url = `${D.input_url}?${f}=${v}`
+                    fetch(url).finally(() => {
+                        D.is_loading = false
+                        this.refresh_data()
+                    })
+                },
+                refresh_data(){
+                    D.is_loading = true
+                    fetch(D.data_url).then(r => r.json()).then(r => { 
+                        D.data = r
+                        console.log(r); 
+                    }).finally(() => { 
+                        D.is_loading = false 
+                    })
+
+                    this.update_data()
+                },
+                get_data(d){
+                    const el = (e) => `<span>${e}</span>`
+                    switch (d){
+                        case 'dam1':
+                            return el(D.data.dam1 ? 'Up' : 'Down') 
+                        case 'dam2':
+                            return el(D.data.dam2 ? 'Up' : 'Down') 
+                        case 'dam3':
+                            return el(D.data.dam3 ? 'Up' : 'Down') 
+                        case 'grb':
+                            return el(D.data.grb ? 'Up' : 'Down') 
+                        case 'alm':
+                            return el(D.data.alm ? 'On' : 'Off') 
+                        case 'vol':
+                            return el(D.data.vol || 0)
+                        case 'wlv':
+                            return el(D.data.wlv || 0)
+                        case 'wls':
+                            for (const e of WaterLevelStatus){
+                                if (e.comp(D.data.wlv)) 
+                                    return el(e.label)
+                            }
+                        default: 
+                            return ''
+                    }
+                },
+                create_chart(){
+                    if (!arguments) return
+                    const [el, data, unit] = arguments,
+                        chart = new CanvasJS.Chart(el, {
+                        toolTip:{ 
+                            content: "{y} "+unit+", <br>{time}" 
+                        },                               
+                        legend:{ 
+                            verticalAlign: "center",
+                            horizontalAlign: "right"
+                        },
+                        data: [{
+                            type: "line",
+                            dataPoints: data
+                        }]
+                    })
+                    return chart
+                },
+                parse_log_data(d){
+                    let r = []
+                    d.forEach((e, i) => {
+                        r.push({y: e.value, x: i, time: new Date(e.time).toUTCString()})
+                    })
+                    return r
+                },
+                update_data(){
+                    fetch(D.voltage_log_url).then(r => r.json()).then(r => { 
+                        D.voltage_data = this.parse_log_data(r)
+                        D.voltage_chart = D.voltage_chart || this.create_chart('volChart', D.voltage_data, 'Volt')
+                        D.voltage_chart.render() 
+                    })
+
+                    fetch(D.water_level_log_url).then(r => r.json()).then(r => { 
+                        D.water_level_data = this.parse_log_data(r)
+                        D.water_level_chart = D.water_level_chart || this.create_chart('wlvChart', D.water_level_data, 'Meter')
+                        D.water_level_chart.render() 
+                    })
+                }
+            },
+            computed : {
+                btn_class() {
+                    return 'btn btn-primary mx-1' + (D.is_loading ? ' disabled':'')
+                }
+            }, 
+            mounted(){
+                this.refresh_data()
+            }
+        })			
+    </script>
+
+
+</body>
+</html>
+
+
+
